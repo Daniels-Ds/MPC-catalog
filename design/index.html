@@ -1,0 +1,329 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>МПС Каталог — металлопрокат по ценам поставщиков</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+  /* Главная: тёмный hero со шпунтовой стенкой, ниже — светлые секции каталога */
+  .hero-home { position: relative; overflow: hidden; background: var(--c-navy); color: #c9d6e6; }
+  .hero-home::before {
+    content: ""; position: absolute; inset: 0; opacity: .5;
+    background-image: linear-gradient(rgba(108,137,174,.14) 1px, transparent 1px), linear-gradient(90deg, rgba(108,137,174,.14) 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
+  .hero-home .container { position: relative; padding-top: clamp(44px, 7vw, 88px); padding-bottom: clamp(120px, 14vw, 170px); }
+  .hero-home .h-display { color: #fff; max-width: 18ch; text-wrap: balance; }
+  .hero-grid { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); gap: clamp(24px, 4vw, 56px); align-items: center; }
+  .preview { display: grid; background: var(--c-surface); color: var(--c-text); border-radius: var(--r-lg); box-shadow: 0 24px 60px rgba(0,0,0,.35); overflow: hidden; transform: rotate(-1.2deg); transition: transform .2s; }
+  .preview:hover { transform: rotate(0); color: var(--c-text); }
+  .preview-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 18px 20px; border-bottom: 1px solid var(--c-line-2); }
+  .preview-head b { display: block; font: 700 16px/1.3 var(--f-head); color: var(--c-ink); margin-top: 4px; }
+  .preview-row { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 12px 20px; border-bottom: 1px solid var(--c-line-2); font-size: 14px; }
+  .preview-row span { font-weight: 600; color: var(--c-ink); }
+  .preview-row small { display: block; font-weight: 400; color: var(--c-text-2); font-size: 12px; }
+  .preview-row b { font-size: 15px; color: var(--c-ink); white-space: nowrap; }
+  .preview-row b.best { color: var(--c-success); }
+  .preview-row.featured { background: #fffcf0; }
+  .preview-foot { display: flex; justify-content: space-between; padding: 14px 20px; font-size: 12.5px; color: var(--c-text-2); background: var(--c-bg); }
+  .preview-foot span { color: var(--c-primary); font-weight: 600; }
+  @media (max-width: 1000px) { .hero-grid { grid-template-columns: 1fr; } .preview { transform: none; } }
+  @media (prefers-reduced-motion: reduce) { .preview, .group { transition: none; } }
+  .hero-home .lead { color: #a9bcd3; margin-top: 18px; }
+  .hero-search { display: flex; gap: 8px; margin-top: 30px; max-width: 760px; background: #fff; padding: 8px; border-radius: var(--r-md); box-shadow: 0 20px 50px rgba(0,0,0,.25); }
+  .hero-search .input { border: 0; height: 54px; font-size: 16px; }
+  .hero-search .input:focus { box-shadow: none; }
+  .hero-search .btn { height: 54px; padding: 0 28px; }
+  .popular { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-top: 18px; font-size: 13.5px; }
+  .popular a { color: #fff; border: 1px solid rgba(255,255,255,.22); border-radius: var(--r-pill); padding: 6px 14px; }
+  .popular a:hover { background: rgba(255,255,255,.08); color: #fff; }
+  .wall { position: absolute; left: 0; right: 0; bottom: 0; height: clamp(80px, 11vw, 130px); pointer-events: none; }
+  .facts { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1px; background: var(--c-line); border-radius: var(--r-lg); overflow: hidden; box-shadow: var(--sh-2); margin-top: -44px; position: relative; }
+  .facts > div { background: var(--c-surface); padding: 20px 24px; }
+  .facts b { display: block; font: 800 26px/1.1 var(--f-head); color: var(--c-ink); }
+  .facts span { font-size: 13px; color: var(--c-text-2); }
+
+  .groups { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
+  .group { display: grid; grid-template-rows: auto 1fr auto; gap: 14px; padding: 22px; background: var(--c-surface); border: 1px solid var(--c-line-2); border-radius: var(--r-lg); transition: border-color .15s, box-shadow .15s; }
+  .group:hover { border-color: var(--c-primary-tint-2); box-shadow: var(--sh-2); }
+  .group-top { display: flex; gap: 14px; align-items: center; }
+  .group h3 { margin: 0; font: 700 16px/1.25 var(--f-head); color: var(--c-ink); }
+  .group-top small { color: var(--c-text-2); font-size: 12.5px; }
+  .group ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; font-size: 14px; }
+  .group ul a { color: var(--c-text); }
+  .group ul a:hover { color: var(--c-primary); }
+  .group .more { font-size: 13.5px; font-weight: 600; }
+
+  .sheet { display: grid; grid-template-columns: 1.1fr 1fr 1fr; gap: 16px; }
+  .sheet-intro { background: linear-gradient(160deg, #0a3463, var(--c-navy)); color: #c9d6e6; border-radius: var(--r-lg); padding: 28px; display: grid; align-content: space-between; gap: 20px; }
+  .sheet-intro .h2 { color: #fff; }
+  .pile { background: var(--c-surface); border-radius: var(--r-lg); box-shadow: var(--sh-2); padding: 24px; display: grid; gap: 14px; }
+  .pile-fig { background: var(--c-bg); border-radius: var(--r-md); padding: 18px 14px; }
+  .pile-fig svg { width: 100%; height: auto; }
+  .pile-top { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+  .pile-top .h2 { font-size: 30px; }
+  .pile-meta { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; font-size: 12.5px; color: var(--c-text-2); }
+  .pile-meta b { display: block; color: var(--c-ink); font-size: 15px; }
+  .pile-price { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding-top: 14px; border-top: 1px solid var(--c-line-2); }
+  .pile-price b { font: 800 20px/1.1 var(--f-head); color: var(--c-ink); }
+
+  .steps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; counter-reset: step; }
+  .step { padding: 24px; background: var(--c-surface); border-radius: var(--r-lg); border: 1px solid var(--c-line-2); }
+  .step::before { counter-increment: step; content: counter(step); display: grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; background: var(--c-primary-tint); color: var(--c-primary); font: 800 15px/1 var(--f-head); margin-bottom: 16px; }
+  .step h3 { margin: 0 0 6px; font: 700 17px/1.3 var(--f-head); color: var(--c-ink); }
+  .step p { margin: 0; font-size: 14px; color: var(--c-text-2); }
+
+  .services { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 12px; }
+  .service { display: grid; gap: 10px; justify-items: start; padding: 20px 18px; background: var(--c-surface); border-radius: var(--r-md); border: 1px solid var(--c-line-2); color: var(--c-text); }
+  .service:hover { border-color: var(--c-primary-tint-2); color: var(--c-text); }
+  .service svg { width: 30px; height: 30px; color: var(--c-primary); }
+  .service b { color: var(--c-ink); font-size: 14.5px; }
+  .service small { color: var(--c-text-2); font-size: 12.5px; line-height: 1.4; }
+
+  .for-sup { display: grid; grid-template-columns: 1.2fr 1fr; gap: 32px; align-items: center; background: var(--c-surface); border-radius: var(--r-lg); box-shadow: var(--sh-2); padding: clamp(24px, 4vw, 44px); }
+  .perks { display: grid; gap: 12px; }
+  .perk { display: flex; gap: 14px; align-items: start; padding: 16px; border-radius: var(--r-md); background: var(--c-bg); }
+  .perk svg { flex: none; color: var(--c-primary); margin-top: 2px; }
+  .perk b { color: var(--c-ink); display: block; }
+  .perk span { font-size: 13.5px; color: var(--c-text-2); }
+
+  .cities { display: flex; flex-wrap: wrap; gap: 8px; }
+
+  @media (max-width: 1100px) {
+    .groups { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .services { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .sheet { grid-template-columns: 1fr 1fr; } .sheet-intro { grid-column: 1 / -1; }
+  }
+  @media (max-width: 760px) {
+    .facts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .steps, .for-sup, .sheet { grid-template-columns: 1fr; }
+    .services { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .hero-search { flex-wrap: wrap; } .hero-search .btn { width: 100%; }
+  }
+  @media (max-width: 480px) { .groups { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<div data-site="header"></div>
+
+<section class="hero-home">
+  <div class="container hero-grid">
+  <div style="min-width:0">
+    <div class="caps" style="color:var(--c-accent)">Металлопрокат по всей России</div>
+    <h1 class="h-display" style="margin-top:14px">Цены поставщиков металла в одном каталоге</h1>
+    <p class="lead">Сравните предложения, соберите список позиций и отправьте один запрос сразу нескольким поставщикам.</p>
+    <form class="hero-search" action="search.html" role="search">
+      <label class="sr-only" for="heroQ">Что ищете</label>
+      <input class="input" id="heroQ" name="q" type="search" placeholder="Например, шпунт Л5-УМ или труба 57×3">
+      <button class="btn btn-primary" type="submit">Найти
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </button>
+    </form>
+    <div class="popular">
+      <span>Часто ищут:</span>
+      <a href="l5-um.html">Шпунт Л5-УМ</a>
+      <a href="search.html?q=труба+57×3">Труба 57×3</a>
+      <a href="search.html?q=арматура+А500С+12">Арматура А500С 12</a>
+      <a href="search.html?q=балка+20Б1">Балка 20Б1</a>
+      <a href="search.html?q=лист+10+мм">Лист 10 мм</a>
+    </div>
+  </div>
+  <a class="preview" href="l5-um.html" aria-label="Открыть цены на шпунт Л5-УМ">
+    <div class="preview-head">
+      <div><div class="caps">Сейчас в каталоге</div><b>Шпунт Ларсена Л5-УМ</b></div>
+      <span class="badge badge-stock"><span class="dot"></span>Москва</span>
+    </div>
+    <div class="preview-row"><span>Экоторг М<small>С255 · 12 м</small></span><b class="num best">125 000 ₽</b></div>
+    <div class="preview-row featured"><span>ГеоСтальСервис<small>★ Проверенный · 4–15 м</small></span><b class="num">131 000 ₽</b></div>
+    <div class="preview-row"><span>ВСТ групп<small>12 м</small></span><b class="num">132 000 ₽</b></div>
+    <div class="preview-row"><span>УВМ-СТАЛЬ<small>С255 · 12 м</small></span><b class="muted" style="font-weight:500">по запросу</b></div>
+    <div class="preview-foot">10 предложений · цена за тонну с НДС <span>Сравнить →</span></div>
+  </a>
+  </div>
+  <!-- шпунтовая стенка: ряд профилей Ларсена в замок -->
+  <svg class="wall" viewBox="0 0 1440 130" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+    <defs>
+      <pattern id="piles" width="180" height="130" patternUnits="userSpaceOnUse">
+        <path d="M0 22 h40 l30 86 h40 l30 -86 h40" fill="none" stroke="#2b5d93" stroke-width="7" stroke-linejoin="round"/>
+        <path d="M0 22 h40 l30 86 h40 l30 -86 h40" fill="none" stroke="#5f8fc4" stroke-width="2" stroke-linejoin="round"/>
+        <circle cx="0" cy="22" r="6" fill="none" stroke="#2b5d93" stroke-width="4"/>
+      </pattern>
+      <linearGradient id="fade" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#041f41" stop-opacity="0"/><stop offset="1" stop-color="#041f41" stop-opacity=".6"/></linearGradient>
+    </defs>
+    <rect width="1440" height="130" fill="url(#piles)"/>
+    <rect width="1440" height="130" fill="url(#fade)"/>
+  </svg>
+</section>
+
+<main class="container">
+  <div class="facts">
+    <div><b class="num">~130</b><span>категорий проката</span></div>
+    <div><b class="num">40</b><span>городов с поставщиками</span></div>
+    <div><b>Ежедневно</b><span>обновляем прайсы</span></div>
+    <div><b class="num">0 ₽</b><span>для покупателей</span></div>
+  </div>
+
+  <div class="ad-slot section" style="min-height:96px">
+    <b>Здесь может быть ваша реклама</b>
+    <small>Баннер 1200×96 на главной · <a href="#">узнать условия</a></small>
+  </div>
+
+  <section class="section" aria-labelledby="catTitle">
+    <div class="section-head">
+      <div><div class="caps">Каталог</div><h2 class="h2" id="catTitle">Что вы ищете?</h2></div>
+      <a class="btn btn-ghost btn-sm" href="catalog.html">Все категории А–Я</a>
+    </div>
+    <div class="groups">
+      <article class="group">
+        <div class="group-top"><span class="pico"><svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linejoin="round"><path d="M3 12h7l6 16h8l6-16h7"/></svg></span><div><h3>Шпунт</h3><small>8 видов</small></div></div>
+        <ul><li><a href="category.html">Шпунт Ларсена</a></li><li><a href="category.html">Шпунт трубчатый</a></li><li><a href="category.html">Шпунт плоский</a></li><li><a href="category.html">Шпунтовые замки</a></li></ul>
+        <a class="more" href="category.html">Все виды →</a>
+      </article>
+      <article class="group">
+        <div class="group-top"><span class="pico"><svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M9 7h22M9 33h22M20 7v26"/></svg></span><div><h3>Сортовой прокат</h3><small>24 вида</small></div></div>
+        <ul><li><a href="catalog.html">Балка</a></li><li><a href="catalog.html">Швеллер</a></li><li><a href="catalog.html">Уголок</a></li><li><a href="catalog.html">Круг и квадрат</a></li></ul>
+        <a class="more" href="catalog.html">Все виды →</a>
+      </article>
+      <article class="group">
+        <div class="group-top"><span class="pico"><svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2.6"><circle cx="20" cy="20" r="12"/><circle cx="20" cy="20" r="7"/></svg></span><div><h3>Трубы</h3><small>38 видов</small></div></div>
+        <ul><li><a href="catalog.html">Труба электросварная</a></li><li><a href="catalog.html">Труба бесшовная</a></li><li><a href="catalog.html">Труба профильная</a></li><li><a href="catalog.html">Труба ВГП</a></li></ul>
+        <a class="more" href="catalog.html">Все виды →</a>
+      </article>
+      <article class="group">
+        <div class="group-top"><span class="pico"><svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linejoin="round"><path d="M6 25l14-8 14 8-14 8z"/><path d="M6 25v3l14 8 14-8v-3"/></svg></span><div><h3>Листовой прокат</h3><small>16 видов</small></div></div>
+        <ul><li><a href="catalog.html">Лист горячекатаный</a></li><li><a href="catalog.html">Лист холоднокатаный</a></li><li><a href="catalog.html">Лист оцинкованный</a></li><li><a href="catalog.html">Профнастил</a></li></ul>
+        <a class="more" href="catalog.html">Все виды →</a>
+      </article>
+      <article class="group">
+        <div class="group-top"><span class="pico"><svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M6 34L34 6"/><path d="M10 26l4 4M15 21l4 4M20 16l4 4M25 11l4 4"/></svg></span><div><h3>Арматура и сетка</h3><small>11 видов</small></div></div>
+        <ul><li><a href="catalog.html">Арматура А3 (А500С)</a></li><li><a href="catalog.html">Арматура А1</a></li><li><a href="catalog.html">Сетка кладочная</a></li><li><a href="catalog.html">Проволока</a></li></ul>
+        <a class="more" href="catalog.html">Все виды →</a>
+      </article>
+      <article class="group">
+        <div class="group-top"><span class="pico"><svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M30 14a11 11 0 0 0-19-3M10 26a11 11 0 0 0 19 3"/><path d="M11 5v6h6M29 35v-6h-6"/></svg></span><div><h3>Б/у металлопрокат</h3><small>12 видов</small></div></div>
+        <ul><li><a href="catalog.html">Труба б/у</a></li><li><a href="catalog.html">Шпунт Ларсена б/у</a></li><li><a href="catalog.html">Балка б/у</a></li><li><a href="catalog.html">Рельс б/у</a></li></ul>
+        <a class="more" href="catalog.html">Все виды →</a>
+      </article>
+      <article class="group">
+        <div class="group-top"><span class="pico"><svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linejoin="round"><path d="M14 6h12l6 10-6 10H14L8 16z"/><path d="M20 26v9"/></svg></span><div><h3>Метизы и такелаж</h3><small>9 видов</small></div></div>
+        <ul><li><a href="catalog.html">Крепёж</a></li><li><a href="catalog.html">Канат стальной</a></li><li><a href="catalog.html">Стропы</a></li><li><a href="catalog.html">Электроды</a></li></ul>
+        <a class="more" href="catalog.html">Все виды →</a>
+      </article>
+      <article class="group">
+        <div class="group-top"><span class="pico"><svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2.6"><rect x="5" y="9" width="30" height="22" rx="3"/><path d="M5 16h30M12 23h8"/></svg></span><div><h3>Профили и панели</h3><small>10 видов</small></div></div>
+        <ul><li><a href="catalog.html">Профиль ЛСТК</a></li><li><a href="catalog.html">Профиль ГКЛ</a></li><li><a href="catalog.html">Сэндвич-панели</a></li><li><a href="catalog.html">Металлочерепица</a></li></ul>
+        <a class="more" href="catalog.html">Все виды →</a>
+      </article>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="pileTitle">
+    <div class="sheet">
+      <div class="sheet-intro">
+        <div>
+          <div class="caps" style="color:var(--c-accent)">Шпунт Ларсена</div>
+          <h2 class="h2" id="pileTitle" style="margin-top:10px">Л5 и Л6 — профили для котлованов, причалов и опор мостов</h2>
+          <p style="margin:12px 0 0;font-size:14.5px">Цены поставщиков, длины от 4 до 15 м, расчёт массы для вашей стенки.</p>
+        </div>
+        <a class="btn btn-white" href="category.html" style="justify-self:start">Все профили Ларсена</a>
+      </div>
+      <article class="pile">
+        <div class="pile-fig"><svg viewBox="0 0 300 110" aria-hidden="true"><path d="M20 26h52l36 62h84l36-62h52" fill="none" stroke="#3c5576" stroke-width="9" stroke-linejoin="round"/><path d="M20 26h52l36 62h84l36-62h52" fill="none" stroke="#9fb4cd" stroke-width="3" stroke-linejoin="round"/></svg></div>
+        <div class="pile-top"><h3 class="h2">Л5-УМ</h3><span class="badge badge-stock"><span class="dot"></span>5 поставщиков</span></div>
+        <div class="pile-meta"><div><b class="num">500 мм</b>ширина</div><div><b class="num">≈114 кг</b>масса 1 п.м.</div><div><b class="num">4–15 м</b>длины</div></div>
+        <div class="pile-price"><div><span class="muted" style="font-size:12.5px">от</span> <b class="num">125 000 ₽/т</b></div><a class="btn btn-primary btn-sm" href="l5-um.html">Сравнить цены</a></div>
+      </article>
+      <article class="pile">
+        <div class="pile-fig"><svg viewBox="0 0 300 110" aria-hidden="true"><path d="M14 22h56l38 68h84l38-68h56" fill="none" stroke="#3c5576" stroke-width="11" stroke-linejoin="round"/><path d="M14 22h56l38 68h84l38-68h56" fill="none" stroke="#9fb4cd" stroke-width="4" stroke-linejoin="round"/></svg></div>
+        <div class="pile-top"><h3 class="h2">Л6</h3><span class="badge badge-info">Под заказ</span></div>
+        <div class="pile-meta"><div><b class="num">500 мм</b>ширина</div><div><b>Усиленный</b>профиль</div><div><b class="num">6–35 м</b>длины</div></div>
+        <div class="pile-price"><div><b>Цена по запросу</b></div><a class="btn btn-outline btn-sm" href="category.html">Запросить</a></div>
+      </article>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="howTitle">
+    <div class="section-head"><div><div class="caps">Как это работает</div><h2 class="h2" id="howTitle">Три шага до лучшей цены</h2></div></div>
+    <div class="steps">
+      <div class="step"><h3>Найдите позицию</h3><p>Через поиск или каталог: категория, типоразмер, марка стали, длина.</p></div>
+      <div class="step"><h3>Сравните поставщиков</h3><p>Цены за тонну, метр, м² или штуку, наличие и города отгрузки в одной таблице.</p></div>
+      <div class="step"><h3>Отправьте один запрос</h3><p>Отметьте нужные строки — запрос уйдёт всем выбранным поставщикам сразу.</p></div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="srvTitle">
+    <div class="section-head">
+      <div><div class="caps">Услуги</div><h2 class="h2" id="srvTitle">Не только металл</h2></div>
+      <a class="btn btn-ghost btn-sm" href="services.html">Все услуги</a>
+    </div>
+    <div class="services">
+      <a class="service" href="services.html"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 3v18M11 16l5 5 5-5M6 27h20"/></svg><b>Погружение шпунта</b><small>Вибро- и статическое вдавливание</small></a>
+      <a class="service" href="services.html"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="23" r="4"/><circle cx="23" cy="23" r="4"/><path d="M12 20L26 4M20 20L6 4"/></svg><b>Резка и рубка</b><small>В размер по вашим чертежам</small></a>
+      <a class="service" href="services.html"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="8" width="17" height="13" rx="1"/><path d="M20 12h5l4 5v4h-9"/><circle cx="9" cy="24" r="3"/><circle cx="24" cy="24" r="3"/></svg><b>Доставка</b><small>По городу и между регионами</small></a>
+      <a class="service" href="services.html"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2"><circle cx="16" cy="16" r="11"/><circle cx="16" cy="16" r="6"/><path d="M16 5v5M16 22v5"/></svg><b>Изоляция труб</b><small>ВУС, ППУ, ЦПП</small></a>
+      <a class="service" href="services.html"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 26V10l10-6 10 6v16"/><path d="M12 26v-8h8v8"/></svg><b>Аренда шпунта</b><small>На время работ на объекте</small></a>
+      <a class="service" href="services.html"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M25 11a10 10 0 0 0-17-3M7 21a10 10 0 0 0 17 3"/><path d="M8 3v5h5M24 29v-5h-5"/></svg><b>Обратный выкуп</b><small>Выкупаем шпунт после работ</small></a>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="supTitle">
+    <div class="for-sup">
+      <div>
+        <div class="caps">Поставщикам</div>
+        <h2 class="h2" id="supTitle" style="margin-top:8px">Покажите свои цены покупателям металла по всей России</h2>
+        <p class="muted" style="margin:12px 0 22px;max-width:52ch">Загрузите прайс в Excel или CSV — позиции появятся в каталоге и будут обновляться при каждой новой загрузке.</p>
+        <div class="row"><a class="btn btn-primary" href="#">Разместить прайс</a><a class="btn btn-ghost" href="#">Тарифы и реклама</a></div>
+      </div>
+      <div class="perks">
+        <div class="perk"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l2.6 5.6 6 .7-4.5 4.1 1.2 6L12 16.6 6.7 19.4l1.2-6L3.4 9.3l6-.7z"/></svg><div><b>Приоритет в таблице цен</b><span>Строки выше конкурентов и метка «Проверенный поставщик»</span></div></div>
+        <div class="perk"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="12" rx="2"/><path d="M8 21h8"/></svg><div><b>Баннеры в категориях</b><span>Реклама на страницах вашего профиля проката</span></div></div>
+        <div class="perk"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 5h16v11H8l-4 4z"/></svg><div><b>Заявки от покупателей</b><span>Запросы цены приходят в личный кабинет и в Telegram</span></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="cityTitle">
+    <div class="section-head"><div><div class="caps">География</div><h2 class="h2" id="cityTitle">Поставщики в 40 городах</h2></div></div>
+    <div class="cities">
+      <a class="chip" href="#" style="display:inline-flex;align-items:center">Москва</a>
+      <a class="chip" href="#" style="display:inline-flex;align-items:center">Санкт-Петербург</a>
+      <a class="chip" href="#" style="display:inline-flex;align-items:center">Екатеринбург</a>
+      <a class="chip" href="#" style="display:inline-flex;align-items:center">Новосибирск</a>
+      <a class="chip" href="#" style="display:inline-flex;align-items:center">Казань</a>
+      <a class="chip" href="#" style="display:inline-flex;align-items:center">Нижний Новгород</a>
+      <a class="chip" href="#" style="display:inline-flex;align-items:center">Челябинск</a>
+      <a class="chip" href="#" style="display:inline-flex;align-items:center">Самара</a>
+      <a class="chip" href="#" style="display:inline-flex;align-items:center">Ростов-на-Дону</a>
+      <a class="chip" href="#" style="display:inline-flex;align-items:center">Краснодар</a>
+      <a class="chip" href="#" style="display:inline-flex;align-items:center">Пермь</a>
+      <a class="chip" href="#" style="display:inline-flex;align-items:center">Уфа</a>
+      <a class="chip" href="#" style="display:inline-flex;align-items:center">Все города →</a>
+    </div>
+  </section>
+</main>
+
+<section class="cta-band" style="margin-top:72px">
+  <div class="container" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:32px;align-items:center;padding-top:48px;padding-bottom:48px">
+    <div>
+      <div class="caps" style="color:var(--c-accent)">Не нашли нужное?</div>
+      <h2 class="h2" style="margin-top:8px">Пришлите список — подберём поставщиков и посчитаем доставку</h2>
+    </div>
+    <form class="row" style="align-items:end" onsubmit="event.preventDefault();this.querySelector('button').textContent='Заявка отправлена'">
+      <div class="field" style="flex:1;min-width:180px"><label for="lp" style="color:#c9d6e6">Телефон</label><input class="input" id="lp" type="tel" placeholder="+7 (___) ___-__-__"></div>
+      <div class="field" style="flex:1;min-width:180px"><label for="lt" style="color:#c9d6e6">Что нужно</label><input class="input" id="lt" placeholder="Например, шпунт Л5-УМ 12 м, 120 т"></div>
+      <button class="btn btn-white" type="submit">Отправить заявку</button>
+    </form>
+  </div>
+</section>
+
+<div data-site="footer"></div>
+
+<script src="data.js"></script>
+<script src="site.js"></script>
+</body>
+</html>

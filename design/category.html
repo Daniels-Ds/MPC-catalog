@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Шпунт Ларсена — цены в Москве · МПС Каталог</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+  .cat-hero { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 24px; align-items: end; }
+  .cat-stats { display: flex; gap: 10px; flex-wrap: wrap; }
+  .cat-stats .stat { min-width: 150px; }
+  .subcats { margin-top: 22px; }
+  .layout { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 24px; align-items: start; margin-top: 24px; }
+  .toolbar { display: grid; gap: 14px; padding: 20px 24px; border-bottom: 1px solid var(--c-line-2); }
+  .toolbar-row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; justify-content: space-between; }
+  .mini-filter { position: relative; width: min(280px, 100%); }
+  .mini-filter .input { height: 40px; padding-left: 38px; }
+  .mini-filter svg { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--c-muted); }
+  .check { display: inline-flex; gap: 8px; align-items: center; font-size: 13.5px; color: var(--c-text); cursor: pointer; }
+  .check input { width: 17px; height: 17px; accent-color: var(--c-primary); }
+  .sizes { width: 100%; border-collapse: collapse; font-size: 14px; }
+  .sizes th { position: sticky; top: var(--header-h); z-index: 2; background: var(--c-surface); text-align: left; font-size: 12px; font-weight: 600; color: var(--c-text-2); padding: 12px 14px; border-bottom: 1px solid var(--c-line); white-space: nowrap; }
+  .sizes th button { all: unset; cursor: pointer; }
+  .sizes th button:hover { color: var(--c-primary); }
+  .sizes td { padding: 12px 14px; border-bottom: 1px solid var(--c-line-2); }
+  .sizes tbody tr { cursor: pointer; }
+  .sizes tbody tr:hover td { background: #f8fbff; }
+  .sizes .name a { font-weight: 600; color: var(--c-ink); }
+  .sizes .name a:hover { color: var(--c-primary); }
+  .sizes .r { text-align: right; }
+  .sizes .price { font-weight: 700; color: var(--c-ink); white-space: nowrap; font-variant-numeric: tabular-nums; }
+  .sizes .series { font-size: 12px; color: var(--c-text-2); }
+  .table-foot { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; align-items: center; padding: 16px 24px; font-size: 13px; color: var(--c-text-2); }
+  .aside { display: grid; gap: 16px; position: sticky; top: calc(var(--header-h) + 16px); }
+  .task { display: flex; gap: 12px; align-items: start; padding: 12px 0; border-top: 1px solid var(--c-line-2); }
+  .task:first-of-type { border-top: 0; }
+  .task b { display: block; color: var(--c-ink); font-size: 14px; }
+  .task span { font-size: 13px; color: var(--c-text-2); }
+  .seo { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px; }
+  .seo p { margin: 0 0 10px; font-size: 14.5px; color: var(--c-text); max-width: 62ch; }
+  @media (max-width: 1100px) { .layout { grid-template-columns: 1fr; } .aside { position: static; grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 760px) {
+    .cat-hero, .seo, .aside { grid-template-columns: 1fr; }
+    .toolbar, .table-foot { padding-left: 16px; padding-right: 16px; }
+    .sizes thead { display: none; }
+    .sizes, .sizes tbody, .sizes tr, .sizes td { display: block; width: 100%; }
+    .sizes tr { display: grid; grid-template-columns: 1fr auto; gap: 2px 12px; padding: 12px 16px; border-bottom: 1px solid var(--c-line-2); }
+    .sizes td { border: 0; padding: 0; }
+    .sizes .c-w, .sizes .c-n { font-size: 12.5px; color: var(--c-text-2); }
+    .sizes .name { grid-area: 1 / 1; }
+    .sizes .c-w { grid-area: 1 / 2; text-align: right; }
+    .sizes .c-n { grid-area: 2 / 1; }
+    .sizes td.r { grid-area: 2 / 2; text-align: right; }
+    .sizes .c-act { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div data-site="header"></div>
+
+<main class="container">
+  <nav class="crumbs" aria-label="Навигация">
+    <a href="index.html">Главная</a><span aria-hidden="true">/</span>
+    <a href="catalog.html">Каталог</a><span aria-hidden="true">/</span>
+    <a href="catalog.html#pile">Шпунт</a><span aria-hidden="true">/</span>
+    <span>Шпунт Ларсена</span>
+  </nav>
+
+  <section class="cat-hero">
+    <div>
+      <div class="caps">Шпунт · цены в Москве</div>
+      <h1 class="h1" style="margin-top:8px">Шпунт Ларсена</h1>
+      <p class="lead" style="margin:10px 0 0">Корытные и Z-образные профили российских и европейских стандартов. Выберите типоразмер, чтобы сравнить цены поставщиков.</p>
+    </div>
+    <div class="cat-stats">
+      <div class="stat"><b class="num" id="sCount">138</b><span>типоразмеров</span></div>
+      <div class="stat"><b class="num">от 125 000 ₽</b><span>за тонну с НДС</span></div>
+    </div>
+  </section>
+
+  <div class="chips subcats" aria-label="Виды шпунта">
+    <a class="chip" aria-pressed="true" href="category.html" style="display:inline-flex;align-items:center">Шпунт Ларсена</a>
+    <a class="chip" href="#" style="display:inline-flex;align-items:center">Шпунт Ларсена б/у</a>
+    <a class="chip" href="#" style="display:inline-flex;align-items:center">Трубошпунт</a>
+    <a class="chip" href="#" style="display:inline-flex;align-items:center">Плоский</a>
+    <a class="chip" href="#" style="display:inline-flex;align-items:center">Коробчатый</a>
+    <a class="chip" href="#" style="display:inline-flex;align-items:center">Двутавровый</a>
+    <a class="chip" href="#" style="display:inline-flex;align-items:center">Угловой элемент</a>
+    <a class="chip" href="#" style="display:inline-flex;align-items:center">Шпунтовые замки</a>
+  </div>
+
+  <div class="ad-slot" style="margin-top:24px;min-height:96px">
+    <b>Здесь может быть ваша реклама</b>
+    <small>Баннер 1200×96 в категории «Шпунт Ларсена» · <a href="#">узнать условия</a></small>
+  </div>
+
+  <div class="layout">
+    <section class="card" aria-labelledby="sizesTitle">
+      <div class="toolbar">
+        <div class="toolbar-row">
+          <h2 class="h3" id="sizesTitle">Типоразмеры</h2>
+          <label class="mini-filter">
+            <span class="sr-only">Найти профиль</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+            <input class="input" id="sizeQ" type="search" placeholder="Например, AZ 18 или 20-600" autocomplete="off">
+          </label>
+        </div>
+        <div class="toolbar-row">
+          <div class="chips" id="series"></div>
+          <label class="check"><input type="checkbox" id="onlyPrice"> Только с ценой</label>
+        </div>
+      </div>
+      <div>
+        <table class="sizes">
+          <thead><tr>
+            <th><button type="button" data-sort="name">Профиль ↕</button></th>
+            <th>Ширина</th>
+            <th>Предложений</th>
+            <th class="r"><button type="button" data-sort="price">Цена от, ₽/т ↕</button></th>
+            <th class="c-act"><span class="sr-only">Перейти</span></th>
+          </tr></thead>
+          <tbody id="rows"></tbody>
+        </table>
+      </div>
+      <div class="table-foot"><span id="summary"></span><span>Цены с НДС, без доставки</span></div>
+    </section>
+
+    <aside class="aside">
+      <section class="card card-pad">
+        <div class="caps">Подбор</div>
+        <h2 class="h3" style="margin:6px 0 10px">Шпунт под задачу</h2>
+        <div class="task"><span class="pico" style="width:40px;height:40px"><svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M6 12h28M10 12v20h20V12"/></svg></span><div><b>Котлован</b><span>Ограждение под фундамент и подземный этаж</span></div></div>
+        <div class="task"><span class="pico" style="width:40px;height:40px"><svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M4 26c5-4 9 4 16 0s11 4 16 0M8 10v14M20 10v14M32 10v14"/></svg></span><div><b>Набережная и причал</b><span>Берегоукрепление и причальные стенки</span></div></div>
+        <div class="task"><span class="pico" style="width:40px;height:40px"><svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M4 14h32M10 14v18M30 14v18M20 14v10"/></svg></span><div><b>Опора моста</b><span>Ограждение опор при строительстве в воде</span></div></div>
+        <button class="btn btn-primary btn-block" type="button" style="margin-top:10px">Подобрать с инженером</button>
+      </section>
+      <div class="ad-slot" style="min-height:260px">
+        <b>Здесь может быть ваша реклама</b>
+        <small>Боковой баннер 300×260</small>
+      </div>
+    </aside>
+  </div>
+
+  <section class="card card-pad section">
+    <div class="caps">О категории</div>
+    <h2 class="h2" style="margin:8px 0 18px">Шпунт Ларсена: что важно при выборе</h2>
+    <div class="seo">
+      <div>
+        <p>Шпунт Ларсена — стальной профиль с замками по краям. Сваи забивают или вдавливают в грунт одну за другой, замки сцепляются и образуют сплошную стенку.</p>
+        <p>Стенка держит грунт и воду: так ограждают котлованы, укрепляют берега, строят причалы и защищают опоры мостов на время работ.</p>
+      </div>
+      <div>
+        <p>Главные параметры — момент сопротивления стенки, масса погонного метра и длина. Чем глубже котлован и выше нагрузка, тем мощнее нужен профиль.</p>
+        <p>Цену поставщики указывают за тонну. Переключатель на странице типоразмера пересчитает её в метры, м² стенки или штуки нужной длины.</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div data-site="footer"></div>
+
+<script src="data.js"></script>
+<script src="site.js"></script>
+<script>
+const SERIES = [
+  ['all', 'Все', () => true],
+  ['ru', 'Л5-УМ и СШК', n => n.startsWith('Л') || n.startsWith('СШК')],
+  ['u', 'U-профили', n => /^(Larssen|PU|GU|VL|ECO|SPU|JU)/.test(n)],
+  ['z', 'Z-профили', n => /^(AZ|SPZ|ZU)/.test(n)],
+];
+const widthOf = n => n === 'Л5-УМ' ? 500 : (+(n.match(/-(\d{3,4})(?!\d)/) || [])[1] || null);
+const items = NAMES.map(n => ({ name: n, width: widthOf(n), offers: OFFERS[n]?.[0] ?? 0, price: OFFERS[n]?.[1] ?? null }));
+const state = { series: 'all', sort: 'popular', dir: 1 };
+const fmt = n => n.toLocaleString('ru-RU');
+
+function renderSeries() {
+  const box = document.getElementById('series'); box.innerHTML = '';
+  SERIES.forEach(([id, label, fn]) => {
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'chip chip-sm';
+    b.textContent = `${label} · ${NAMES.filter(fn).length}`;
+    b.setAttribute('aria-pressed', String(state.series === id));
+    b.onclick = () => { state.series = id; renderSeries(); render(); };
+    box.append(b);
+  });
+}
+
+function render() {
+  const q = document.getElementById('sizeQ').value.trim().toLowerCase().replace(/\s+/g, '');
+  const only = document.getElementById('onlyPrice').checked;
+  const fn = SERIES.find(s => s[0] === state.series)[2];
+  let list = items.filter(i => fn(i.name) && (!only || i.price) && (!q || i.name.toLowerCase().replace(/\s+/g, '').includes(q)));
+  if (state.sort === 'name') list.sort((a, b) => a.name.localeCompare(b.name, 'ru', { numeric: true }) * state.dir);
+  else if (state.sort === 'price') list.sort((a, b) => ((a.price ?? Infinity) - (b.price ?? Infinity)) * (a.price && b.price ? state.dir : 1));
+  else list.sort((a, b) => b.offers - a.offers || (a.price ?? Infinity) - (b.price ?? Infinity));
+  const tbody = document.getElementById('rows');
+  tbody.innerHTML = list.length ? list.map(i => {
+    const href = i.name === 'Л5-УМ' ? 'l5-um.html' : '#';
+    return `<tr data-href="${href}">
+      <td class="name"><a href="${href}">${i.name}</a></td>
+      <td class="c-w num">${i.width ? i.width + ' мм' : ''}</td>
+      <td class="c-n num">${i.offers ? i.offers + ' предл.' : '<span class="muted">—</span>'}</td>
+      <td class="r">${i.price ? `<span class="price">${fmt(i.price)} ₽</span>` : '<span class="muted">по запросу</span>'}</td>
+      <td class="c-act r"><a class="btn btn-ghost btn-sm" href="${href}">Цены</a></td>
+    </tr>`;
+  }).join('') : '<tr><td colspan="5" style="padding:40px;text-align:center;color:var(--c-text-2)">Ничего не нашли. Попробуйте другой профиль или сбросьте фильтры.</td></tr>';
+  tbody.querySelectorAll('tr[data-href]').forEach(tr => tr.onclick = e => { if (!e.target.closest('a')) location.href = tr.dataset.href; });
+  const priced = list.filter(i => i.price).length;
+  document.getElementById('summary').textContent = `${list.length} профилей · ${priced} с ценой`;
+}
+
+document.getElementById('sizeQ').oninput = render;
+document.getElementById('onlyPrice').onchange = render;
+document.querySelectorAll('[data-sort]').forEach(b => b.onclick = () => {
+  state.dir = state.sort === b.dataset.sort ? -state.dir : 1; state.sort = b.dataset.sort; render();
+});
+renderSeries(); render();
+</script>
+</body>
+</html>

@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Услуги · МПС Каталог</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+  .srv-hero { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: 28px; align-items: end; padding-bottom: 8px; }
+  .srv-hero .h1 { text-wrap: balance; }
+  .srv-filter { margin-top: 24px; }
+  .srv-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin-top: 20px; }
+  .srv { display: grid; grid-template-rows: auto auto 1fr auto; gap: 12px; padding: 24px; background: var(--c-surface); border: 1px solid var(--c-line-2); border-radius: var(--r-lg); scroll-margin-top: calc(var(--header-h) + 16px); }
+  .srv:hover { border-color: var(--c-primary-tint-2); box-shadow: var(--sh-2); }
+  .srv-top { display: flex; justify-content: space-between; align-items: start; gap: 12px; }
+  .srv h3 { margin: 0; font: 800 18px/1.25 var(--f-head); color: var(--c-ink); }
+  .srv p { margin: 0; font-size: 14px; color: var(--c-text-2); }
+  .srv ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 6px; font-size: 13.5px; align-content: start; }
+  .srv li { display: flex; gap: 8px; }
+  .srv li::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--c-primary); margin-top: 8px; flex: none; }
+  .srv-foot { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding-top: 14px; border-top: 1px solid var(--c-line-2); }
+  .srv-foot span { font-size: 13px; color: var(--c-text-2); }
+  .srv-tag { font-size: 11.5px; font-weight: 600; padding: 3px 10px; border-radius: var(--r-pill); background: var(--c-bg); color: var(--c-text-2); white-space: nowrap; }
+  .steps { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; counter-reset: step; }
+  .step { padding: 22px; background: var(--c-surface); border-radius: var(--r-lg); border: 1px solid var(--c-line-2); }
+  .step::before { counter-increment: step; content: counter(step); display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; background: var(--c-primary-tint); color: var(--c-primary); font: 800 14px/1 var(--f-head); margin-bottom: 14px; }
+  .step b { display: block; color: var(--c-ink); font-size: 15px; margin-bottom: 4px; }
+  .step span { font-size: 13.5px; color: var(--c-text-2); }
+  .order { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); gap: 32px; padding: clamp(24px, 4vw, 40px); background: linear-gradient(120deg, var(--c-navy), #0a3463); color: #c9d6e6; border-radius: var(--r-lg); scroll-margin-top: calc(var(--header-h) + 16px); }
+  .order .h2 { color: #fff; }
+  .order form { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .order label { color: #c9d6e6 !important; }
+  .order .wide { grid-column: 1 / -1; }
+  .order textarea { height: 96px; padding: 12px 14px; resize: vertical; }
+  .done { display: grid; place-items: center; text-align: center; gap: 8px; padding: 24px; background: rgba(255,255,255,.06); border-radius: var(--r-md); }
+  .done b { color: #fff; font: 800 20px/1.2 var(--f-head); }
+  @media (max-width: 1100px) { .srv-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .steps { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 760px) { .srv-hero, .order { grid-template-columns: 1fr; } .srv-grid, .steps { grid-template-columns: 1fr; } .order form { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<div data-site="header"></div>
+
+<main class="container">
+  <nav class="crumbs" aria-label="Навигация"><a href="index.html">Главная</a><span aria-hidden="true">/</span><span>Услуги</span></nav>
+
+  <section class="srv-hero">
+    <div>
+      <div class="caps">Услуги</div>
+      <h1 class="h1" style="margin-top:8px">Работы со шпунтом, обработка и доставка металла</h1>
+    </div>
+    <p class="lead" style="margin:0">Закажите услугу вместе с металлом или отдельно. Оставьте заявку — рассчитаем стоимость и сроки под ваш объект.</p>
+  </section>
+
+  <div class="chips srv-filter" id="filter" aria-label="Виды услуг"></div>
+  <div class="srv-grid" id="grid"></div>
+
+  <div class="ad-slot section" style="min-height:96px"><b>Здесь может быть ваша реклама</b><small>Баннер в разделе «Услуги» · <a href="#">узнать условия</a></small></div>
+
+  <section class="section" aria-labelledby="howTitle">
+    <div class="section-head"><div><div class="caps">Как заказать</div><h2 class="h2" id="howTitle">От заявки до выполнения</h2></div></div>
+    <div class="steps">
+      <div class="step"><b>Заявка</b><span>Опишите задачу, объём и адрес объекта или пришлите проект.</span></div>
+      <div class="step"><b>Расчёт</b><span>Подбираем исполнителя и готовим коммерческое предложение.</span></div>
+      <div class="step"><b>Договор</b><span>Согласуем сроки, цену и порядок оплаты.</span></div>
+      <div class="step"><b>Выполнение</b><span>Работы на объекте, доставка и закрывающие документы.</span></div>
+    </div>
+  </section>
+
+  <section class="order section" id="order" aria-labelledby="orderTitle">
+    <div>
+      <div class="caps" style="color:var(--c-accent)">Заявка на услугу</div>
+      <h2 class="h2" id="orderTitle" style="margin-top:8px">Рассчитаем стоимость под ваш объект</h2>
+      <p style="margin:12px 0 0;font-size:14.5px">Заявка попадёт в раздел «Заявки» админки, менеджер свяжется с вами.</p>
+    </div>
+    <div id="orderBox">
+      <form id="orderForm">
+        <div class="field wide"><label for="oSrv">Услуга</label><select class="select" id="oSrv"></select></div>
+        <div class="field"><label for="oCity">Город объекта</label><select class="select" id="oCity"></select></div>
+        <div class="field"><label for="oVol">Объём</label><input class="input" id="oVol" placeholder="Например, 120 т или 300 м стенки"></div>
+        <div class="field wide"><label for="oText">Что нужно сделать</label><textarea class="input" id="oText" placeholder="Глубина котлована, тип грунта, сроки — всё, что известно"></textarea></div>
+        <div class="field"><label for="oName">Имя</label><input class="input" id="oName"></div>
+        <div class="field"><label for="oPhone">Телефон</label><input class="input" id="oPhone" type="tel" placeholder="+7 (___) ___-__-__"></div>
+        <div class="wide row" style="justify-content:space-between">
+          <label style="font-size:12.5px;display:flex;gap:8px;align-items:center"><input type="checkbox" checked> Согласен на обработку персональных данных</label>
+          <button class="btn btn-white" type="submit">Отправить заявку</button>
+        </div>
+      </form>
+    </div>
+  </section>
+</main>
+
+<div data-site="footer"></div>
+
+<script src="data.js"></script>
+<script src="site.js"></script>
+<script>
+const ICON = {
+  drive: '<path d="M16 3v18M11 16l5 5 5-5M6 27h20"/>',
+  pull: '<path d="M16 21V3M11 8l5-5 5 5M6 27h20"/>',
+  rent: '<path d="M6 26V10l10-6 10 6v16"/><path d="M12 26v-8h8v8"/>',
+  buy: '<path d="M25 11a10 10 0 0 0-17-3M7 21a10 10 0 0 0 17 3"/><path d="M8 3v5h5M24 29v-5h-5"/>',
+  weld: '<path d="M4 16h10M18 16h10"/><path d="M16 10v12"/><path d="M13 7l3 3 3-3"/>',
+  coat: '<path d="M16 4l9 4v7c0 6-4 10-9 13-5-3-9-7-9-13V8z"/>',
+  cut: '<circle cx="9" cy="23" r="4"/><circle cx="23" cy="23" r="4"/><path d="M12 20L26 4M20 20L6 4"/>',
+  pipe: '<circle cx="16" cy="16" r="11"/><circle cx="16" cy="16" r="6"/><path d="M16 5v5M16 22v5"/>',
+  truck: '<rect x="3" y="8" width="17" height="13" rx="1"/><path d="M20 12h5l4 5v4h-9"/><circle cx="9" cy="24" r="3"/><circle cx="24" cy="24" r="3"/>',
+};
+const KINDS = [['all', 'Все'], ['pile', 'Шпунтовые работы'], ['metal', 'Обработка металла'], ['pipe', 'Изоляция труб'], ['logistics', 'Логистика']];
+const LIST = [
+  { id: 'drive', kind: 'pile', icon: 'drive', name: 'Погружение шпунта', text: 'Устройство шпунтового ограждения котлованов, берегов и опор.', items: ['Вибропогружение', 'Статическое вдавливание', 'Подбор техники под грунт'] },
+  { id: 'pull', kind: 'pile', icon: 'pull', name: 'Извлечение шпунта', text: 'Демонтаж шпунтовой стенки после завершения работ.', items: ['Извлечение вибропогружателем', 'Вывоз шпунта с объекта'] },
+  { id: 'rent', kind: 'pile', icon: 'rent', name: 'Аренда шпунта', text: 'Шпунт на время работ вместо покупки — для временных ограждений.', items: ['Профили Л5-УМ, Л6 и другие', 'Погружение и извлечение под ключ'] },
+  { id: 'buy', kind: 'pile', icon: 'buy', name: 'Обратный выкуп шпунта', text: 'Выкупаем шпунт после завершения работ на объекте.', items: ['Оценка состояния', 'Самовывоз с объекта'] },
+  { id: 'weld', kind: 'pile', icon: 'weld', name: 'Резка и стыковка шпунта', text: 'Подготовка шпунта нужной длины по проекту.', items: ['Резка в размер', 'Стыковка до проектной длины'] },
+  { id: 'coat', kind: 'metal', icon: 'coat', name: 'Антикоррозийная обработка', text: 'Защитное покрытие металла под условия эксплуатации.', items: ['Шпунт и металлоконструкции', 'Подбор покрытия под среду'] },
+  { id: 'cutm', kind: 'metal', icon: 'cut', name: 'Резка и рубка металла', text: 'Нарезка проката в размер по вашим чертежам.', items: ['Лист, труба, сортовой прокат', 'Резка в размер по спецификации'] },
+  { id: 'vus', kind: 'pipe', icon: 'pipe', name: 'Изоляция труб ВУС и ЦПП', text: 'Наружная и внутренняя изоляция стальных труб.', items: ['Весьма усиленная изоляция (ВУС)', 'Цементно-песчаное покрытие (ЦПП)'] },
+  { id: 'ppu', kind: 'pipe', icon: 'pipe', name: 'Изоляция труб ППУ', text: 'Теплоизоляция труб пенополиуретаном.', items: ['Труба в ППУ-изоляции', 'Фасонные изделия'] },
+  { id: 'deliv', kind: 'logistics', icon: 'truck', name: 'Доставка металла', text: 'Доставка проката и шпунта на объект.', items: ['По городу и между регионами', 'Длинномеры и манипуляторы'] },
+];
+let kind = 'all';
+
+function renderFilter() {
+  const box = document.getElementById('filter'); box.innerHTML = '';
+  KINDS.forEach(([k, label]) => {
+    const n = k === 'all' ? LIST.length : LIST.filter(s => s.kind === k).length;
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'chip'; b.textContent = `${label} · ${n}`;
+    b.setAttribute('aria-pressed', String(kind === k));
+    b.onclick = () => { kind = k; renderFilter(); renderGrid(); };
+    box.append(b);
+  });
+}
+
+function renderGrid() {
+  const label = Object.fromEntries(KINDS);
+  document.getElementById('grid').innerHTML = LIST.filter(s => kind === 'all' || s.kind === kind).map(s => `
+    <article class="srv" id="${s.id}">
+      <div class="srv-top"><span class="pico"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${ICON[s.icon]}</svg></span><span class="srv-tag">${label[s.kind]}</span></div>
+      <div><h3>${s.name}</h3><p style="margin-top:6px">${s.text}</p></div>
+      <ul>${s.items.map(i => `<li>${i}</li>`).join('')}</ul>
+      <div class="srv-foot"><span>Цена — по расчёту</span><button class="btn btn-outline btn-sm" type="button" data-order="${s.id}">Заказать</button></div>
+    </article>`).join('');
+  document.querySelectorAll('[data-order]').forEach(b => b.onclick = () => {
+    document.getElementById('oSrv').value = b.dataset.order;
+    document.getElementById('order').scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+    setTimeout(() => document.getElementById('oVol').focus({ preventScroll: true }), 400);
+  });
+}
+
+document.getElementById('oSrv').innerHTML = LIST.map(s => `<option value="${s.id}">${s.name}</option>`).join('');
+document.getElementById('oCity').innerHTML = CITIES.map(c => `<option>${c}</option>`).join('');
+try { document.getElementById('oCity').value = localStorage.getItem('city') || 'Москва'; } catch {}
+document.getElementById('orderForm').onsubmit = e => {
+  e.preventDefault();
+  const srv = LIST.find(s => s.id === document.getElementById('oSrv').value);
+  document.getElementById('orderBox').innerHTML = `<div class="done"><b>Заявка отправлена</b><span>«${srv.name}», ${document.getElementById('oCity').value}. Менеджер свяжется с вами в рабочее время.</span></div>`;
+};
+
+renderFilter(); renderGrid();
+</script>
+</body>
+</html>

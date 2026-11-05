@@ -1,0 +1,14 @@
+{
+  "name": "mps-catalog-demo",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Демо-концепт МПС Каталога: металлопрокат по ценам поставщиков",
+  "scripts": {
+    "start": "node server.js",
+    "check": "node tools/check.js",
+    "build:artifact": "node tools/build-publish.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

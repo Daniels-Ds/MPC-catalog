@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Поставщики металлопроката · МПС Каталог</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+  .sup-head { display: flex; justify-content: space-between; align-items: end; gap: 20px; flex-wrap: wrap; padding-bottom: 20px; }
+  .layout { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 24px; align-items: start; }
+  .filters { display: flex; flex-wrap: wrap; gap: 12px; align-items: end; padding: 18px 20px; }
+  .filters .field { min-width: 180px; flex: 1; }
+  .filters .input, .filters .select { height: 42px; }
+  .check { display: inline-flex; gap: 8px; align-items: center; font-size: 14px; height: 42px; cursor: pointer; }
+  .check input { width: 17px; height: 17px; accent-color: var(--c-primary); }
+  .list { display: grid; gap: 12px; margin-top: 16px; }
+  .sup-card { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 18px; align-items: center; padding: 20px 22px; background: var(--c-surface); border: 1px solid var(--c-line-2); border-radius: var(--r-lg); }
+  .sup-card.featured { background: #fffcf0; border-color: #f0dc8a; }
+  .sup-main { display: grid; gap: 8px; min-width: 0; }
+  .sup-title { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  .sup-title a { font: 800 18px/1.2 var(--f-head); color: var(--c-ink); }
+  .sup-title a:hover { color: var(--c-primary); }
+  .sup-meta { display: flex; gap: 6px 16px; flex-wrap: wrap; font-size: 13px; color: var(--c-text-2); }
+  .sup-meta b { color: var(--c-ink); font-variant-numeric: tabular-nums; }
+  .sup-profiles { display: flex; gap: 6px; flex-wrap: wrap; }
+  .sup-profiles a, .sup-profiles span { font-size: 12.5px; padding: 3px 10px; border-radius: var(--r-pill); background: var(--c-bg); border: 1px solid var(--c-line-2); color: var(--c-text); }
+  .sup-side { display: grid; gap: 8px; justify-items: end; text-align: right; }
+  .aside { display: grid; gap: 16px; position: sticky; top: calc(var(--header-h) + 16px); }
+  .plan { display: grid; gap: 4px; padding: 14px 0; border-top: 1px solid var(--c-line-2); }
+  .plan b { color: var(--c-ink); }
+  .plan span { font-size: 13px; color: var(--c-text-2); }
+  @media (max-width: 1000px) { .layout { grid-template-columns: 1fr; } .aside { position: static; } }
+  @media (max-width: 640px) { .sup-card { grid-template-columns: auto minmax(0, 1fr); } .sup-side { grid-column: 1 / -1; justify-items: stretch; text-align: left; } .sup-side .btn { width: 100%; } }
+</style>
+</head>
+<body>
+
+<div data-site="header"></div>
+
+<main class="container">
+  <nav class="crumbs" aria-label="Навигация"><a href="index.html">Главная</a><span aria-hidden="true">/</span><span>Поставщики</span></nav>
+
+  <div class="sup-head">
+    <div>
+      <div class="caps">Поставщики</div>
+      <h1 class="h1" style="margin-top:8px">Поставщики металлопроката</h1>
+      <p class="lead" style="margin:10px 0 0">Компании, чьи прайсы есть в каталоге. Откройте карточку, чтобы увидеть все позиции и цены поставщика.</p>
+    </div>
+    <div data-contacts-toggle></div>
+  </div>
+
+  <div class="layout">
+    <div>
+      <section class="card filters" aria-label="Фильтры">
+        <div class="field"><label for="fq">Название</label><input class="input" id="fq" type="search" placeholder="Например, Гео" autocomplete="off"></div>
+        <div class="field"><label for="fcity">Город</label><select class="select" id="fcity"></select></div>
+        <div class="field"><label for="fcat">Что продаёт</label>
+          <select class="select" id="fcat"><option value="">Все категории</option><option>Шпунт Ларсена</option><option>Трубы</option><option>Сортовой прокат</option></select></div>
+        <div class="field"><label for="fsort">Сортировка</label>
+          <select class="select" id="fsort"><option value="offers">Больше позиций</option><option value="price">Ниже цена</option><option value="name">По названию</option></select></div>
+        <label class="check"><input type="checkbox" id="fver"> Только проверенные</label>
+      </section>
+      <div class="row" style="justify-content:space-between;margin-top:16px"><span class="muted" id="summary" style="font-size:14px"></span></div>
+      <div class="list" id="list"></div>
+    </div>
+
+    <aside class="aside">
+      <section class="card card-pad">
+        <div class="caps">Поставщикам</div>
+        <h2 class="h3" style="margin:6px 0 4px">Разместите свой прайс</h2>
+        <p class="muted" style="margin:0 0 6px;font-size:14px">Загрузите Excel или CSV — позиции появятся в каталоге.</p>
+        <div class="plan"><b>Базовое размещение</b><span>Позиции в таблицах цен и карточка компании</span></div>
+        <div class="plan"><b>★ Проверенный поставщик</b><span>Строки выше в таблицах и отметка в каталоге</span></div>
+        <div class="plan"><b>Баннер в категории</b><span>Реклама на страницах вашего профиля проката</span></div>
+        <a class="btn btn-primary btn-block" href="#" style="margin-top:8px">Узнать условия</a>
+      </section>
+      <div class="ad-slot" style="min-height:260px"><b>Здесь может быть ваша реклама</b><small>Баннер в разделе «Поставщики» 300×260</small></div>
+    </aside>
+  </div>
+</main>
+
+<div data-site="footer"></div>
+
+<script src="data.js"></script>
+<script src="site.js"></script>
+<script>
+const fmt = n => n.toLocaleString('ru-RU');
+const sel = document.getElementById('fcity');
+sel.innerHTML = '<option value="">Все города</option>' + CITIES.map(c => `<option>${c}</option>`).join('');
+
+
+function render() {
+  const q = norm(document.getElementById('fq').value);
+  const city = sel.value, cat = document.getElementById('fcat').value, ver = document.getElementById('fver').checked;
+  const sort = document.getElementById('fsort').value, open = contactsVisible();
+  let list = SUPPLIERS.filter(s => (!q || norm(s.name).includes(q)) && (!city || s.city === city) && (!cat || s.cats.includes(cat)) && (!ver || s.featured));
+  list.sort((a, b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0) ||
+    (sort === 'name' ? a.name.localeCompare(b.name, 'ru') : sort === 'price' ? (a.minPrice ?? Infinity) - (b.minPrice ?? Infinity) : b.offers - a.offers));
+  document.getElementById('summary').textContent = `${list.length} поставщиков${city ? ' · ' + city : ''}`;
+  document.getElementById('list').innerHTML = list.length ? list.map(s => `
+    <article class="sup-card${s.featured ? ' featured' : ''}">
+      <span class="avatar" aria-hidden="true">${initials(s.name)}</span>
+      <div class="sup-main">
+        <div class="sup-title"><a href="supplier.html#${s.id}">${s.name}</a>${s.featured ? '<span class="badge badge-verified">★ Проверенный поставщик</span>' : ''}</div>
+        <div class="sup-meta"><span>${s.city}</span><span><b>${s.offers}</b> позиций</span><span><b>${s.profiles.length}</b> профилей</span>${s.minPrice ? `<span>от <b>${fmt(s.minPrice)} ₽/т</b></span>` : ''}</div>
+        <div class="sup-profiles">${s.profiles.slice(0, 6).map(p => `<a href="${p === 'Л5-УМ' ? 'l5-um.html' : '#'}">${p}</a>`).join('')}${s.profiles.length > 6 ? `<span>+${s.profiles.length - 6}</span>` : ''}</div>
+      </div>
+      <div class="sup-side">
+        ${open ? `<span class="phone">${s.phone}</span>` : '<span class="phone phone-hidden">+7 (···) ···-··-··</span>'}
+        <a class="btn btn-outline btn-sm" href="supplier.html#${s.id}">Цены поставщика</a>
+      </div>
+    </article>`).join('') : '<div class="card card-pad muted" style="text-align:center">Под эти фильтры поставщиков нет. Попробуйте другой город или категорию.</div>';
+}
+
+['fq', 'fcity', 'fcat', 'fsort', 'fver'].forEach(id => document.getElementById(id).addEventListener('input', render));
+mountContactsToggle(render);
+render();
+</script>
+</body>
+</html>

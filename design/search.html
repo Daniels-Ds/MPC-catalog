@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Поиск · МПС Каталог</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+  .s-head { display: grid; gap: 16px; padding-bottom: 8px; }
+  .s-form { display: flex; gap: 8px; max-width: 760px; }
+  .s-form .input { height: 54px; font-size: 17px; }
+  .s-form .btn { height: 54px; }
+  .s-fixed { font-size: 14px; color: var(--c-text-2); }
+  .s-fixed b { color: var(--c-ink); }
+  .layout { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 24px; align-items: start; margin-top: 20px; }
+  .s-results { display: grid; gap: 16px; }
+  .s-block { padding: 22px 24px; }
+  .s-block-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin-bottom: 14px; }
+  .s-block-head h2 { margin: 0; font: 800 18px/1.2 var(--f-head); color: var(--c-ink); }
+  .s-block-head span { font-size: 13px; color: var(--c-text-2); }
+  .s-cats { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 240px), 1fr)); gap: 10px; }
+  .s-cat { display: flex; gap: 12px; align-items: center; padding: 12px; border-radius: var(--r-md); border: 1px solid var(--c-line-2); color: var(--c-text); }
+  .s-cat:hover { border-color: var(--c-primary-tint-2); background: #f8fbff; color: var(--c-text); }
+  .s-cat .pico { width: 42px; height: 42px; }
+  .s-cat .pico svg { width: 26px; height: 26px; }
+  .s-cat b { display: block; color: var(--c-ink); font-size: 14.5px; }
+  .s-cat small { color: var(--c-text-2); font-size: 12.5px; }
+  .s-sizes { width: 100%; border-collapse: collapse; font-size: 14px; }
+  .s-sizes td { padding: 11px 10px; border-top: 1px solid var(--c-line-2); }
+  .s-sizes tr:first-child td { border-top: 0; }
+  .s-sizes .name a { font-weight: 600; color: var(--c-ink); }
+  .s-sizes .name small { display: block; color: var(--c-text-2); font-size: 12.5px; }
+  .s-sizes .r { text-align: right; white-space: nowrap; }
+  .s-sizes .price { font-weight: 700; color: var(--c-ink); font-variant-numeric: tabular-nums; }
+  .s-sups { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr)); gap: 10px; }
+  .s-sup { display: grid; gap: 6px; padding: 16px; border-radius: var(--r-md); border: 1px solid var(--c-line-2); color: var(--c-text); }
+  .s-sup:hover { border-color: var(--c-primary-tint-2); color: var(--c-text); }
+  .s-sup b { color: var(--c-ink); }
+  .s-sup small { color: var(--c-text-2); font-size: 12.5px; }
+  .s-more { margin-top: 12px; }
+  mark { background: var(--c-accent-tint); color: inherit; border-radius: 3px; padding: 0 1px; }
+  .s-empty { padding: 40px 28px; text-align: center; }
+  .s-empty .chips { justify-content: center; margin-top: 16px; }
+  .aside { display: grid; gap: 16px; position: sticky; top: calc(var(--header-h) + 16px); }
+  @media (max-width: 1000px) { .layout { grid-template-columns: 1fr; } .aside { position: static; } }
+  @media (max-width: 560px) { .s-form { flex-wrap: wrap; } .s-form .btn { width: 100%; } .s-block { padding: 18px 16px; } .s-sizes .c-n { display: none; } }
+</style>
+</head>
+<body>
+
+<div data-site="header"></div>
+
+<main class="container">
+  <nav class="crumbs" aria-label="Навигация"><a href="index.html">Главная</a><span aria-hidden="true">/</span><span>Поиск</span></nav>
+
+  <section class="s-head">
+    <h1 class="h1" id="sTitle">Поиск по каталогу</h1>
+    <form class="s-form" id="sForm" role="search">
+      <label class="sr-only" for="sq">Что ищете</label>
+      <input class="input" id="sq" type="search" autocomplete="off" placeholder="Шпунт, профиль, категория или поставщик">
+      <button class="btn btn-primary" type="submit">Найти</button>
+    </form>
+    <div class="s-fixed" id="sFixed" hidden></div>
+    <div class="chips" id="sTabs"></div>
+  </section>
+
+  <div class="layout">
+    <div class="s-results" id="sResults"></div>
+    <aside class="aside">
+      <section class="card card-pad">
+        <div class="caps">Не нашли нужное?</div>
+        <h2 class="h3" style="margin:6px 0 8px">Пришлите заявку</h2>
+        <p class="muted" style="margin:0 0 14px;font-size:14px">Опишите позицию своими словами — подберём поставщиков вручную.</p>
+        <form class="stack" style="gap:10px" id="leadForm">
+          <div class="field"><label for="lw">Что нужно</label><input class="input" id="lw" placeholder="Например, шпунт Л5-УМ 12 м, 120 т"></div>
+          <div class="field"><label for="lph">Телефон</label><input class="input" id="lph" type="tel" placeholder="+7 (___) ___-__-__"></div>
+          <button class="btn btn-primary btn-block" type="submit">Отправить заявку</button>
+        </form>
+      </section>
+      <div class="ad-slot" style="min-height:260px"><b>Здесь может быть ваша реклама</b><small>Баннер в результатах поиска 300×260</small></div>
+    </aside>
+  </div>
+</main>
+
+<div data-site="footer"></div>
+
+<script src="data.js"></script>
+<script src="site.js"></script>
+<script>
+const TABS = [['all', 'Все'], ['cat', 'Категории'], ['size', 'Типоразмеры'], ['sup', 'Поставщики'], ['srv', 'Услуги']];
+const state = { q: '', tab: 'all', showAll: false };
+const fmt = n => n.toLocaleString('ru-RU');
+const esc = s => s.replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+// Подсветка совпадения в названии с учётом нормализации (пробелы, дефисы, регистр)
+function highlight(name, q) {
+  const tokens = q.split(/\s+/).map(norm).filter(Boolean);
+  const chars = [...name], map = [];
+  let flat = '';
+  chars.forEach((ch, i) => { const n = norm(ch); if (n) { flat += n; map.push(i); } });
+  const on = new Array(chars.length).fill(false);
+  tokens.forEach(t => { const at = flat.indexOf(t); if (at >= 0) for (let k = at; k < at + t.length; k++) on[map[k]] = true; });
+  return chars.map((ch, i) => on[i] && !on[i - 1] ? '<mark>' + esc(ch) + (on[i + 1] ? '' : '</mark>') : on[i] && !on[i + 1] ? esc(ch) + '</mark>' : esc(ch)).join('');
+}
+
+function render() {
+  const { results, fixed } = searchCatalog(state.q);
+  const shownQ = fixed || state.q;
+  document.getElementById('sTitle').textContent = state.q ? `Найдено ${results.length} по запросу «${shownQ}»` : 'Поиск по каталогу';
+  const fixedBox = document.getElementById('sFixed');
+  fixedBox.hidden = !fixed;
+  if (fixed) fixedBox.innerHTML = `Похоже, была включена английская раскладка. Показываем результаты для <b>«${esc(fixed)}»</b> вместо «${esc(state.q)}».`;
+
+  const by = Object.fromEntries(TABS.map(([t]) => [t, t === 'all' ? results : results.filter(r => r.type === t)]));
+  const tabs = document.getElementById('sTabs'); tabs.innerHTML = '';
+  TABS.forEach(([t, label]) => {
+    if (t !== 'all' && !by[t].length) return;
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'chip chip-sm'; b.textContent = `${label} · ${by[t].length}`;
+    b.setAttribute('aria-pressed', String(state.tab === t));
+    b.onclick = () => { state.tab = t; state.showAll = false; render(); };
+    tabs.append(b);
+  });
+
+  const box = document.getElementById('sResults');
+  if (!results.length) {
+    box.innerHTML = `<section class="card s-empty">
+      <h2 class="h3">По запросу «${esc(state.q)}» ничего не нашли</h2>
+      <p class="muted" style="margin:8px 0 0">Проверьте написание или попробуйте короче: тип проката и размер, например «уголок 50».</p>
+      <div class="chips">${['Шпунт Л5-УМ', 'AZ 18', 'СШК 20-600', 'Труба', 'Арматура', 'Балка'].map(s => `<button type="button" class="chip chip-sm" data-try="${s}">${s}</button>`).join('')}</div>
+    </section>`;
+    box.querySelectorAll('[data-try]').forEach(b => b.onclick = () => go(b.dataset.try));
+    return;
+  }
+
+  const blocks = [];
+  const want = t => state.tab === 'all' || state.tab === t;
+  const limit = (list, n) => state.tab === 'all' ? list.slice(0, n) : state.showAll ? list : list.slice(0, 30);
+  const moreBtn = (t, list, n) => (state.tab === 'all' && list.length > n) ? `<button type="button" class="btn btn-ghost btn-sm s-more" data-tab="${t}">Показать все ${list.length}</button>`
+    : (state.tab === t && !state.showAll && list.length > 30) ? `<button type="button" class="btn btn-ghost btn-sm s-more" data-all>Показать ещё ${list.length - 30}</button>` : '';
+
+  if (want('cat') && by.cat.length) blocks.push(`<section class="card s-block"><div class="s-block-head"><h2>Категории</h2><span>${by.cat.length}</span></div>
+    <div class="s-cats">${limit(by.cat, 6).map(c => `<a class="s-cat" href="${c.href}"><span class="pico"><svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round">${ICONS[c.icon]}</svg></span><span><b>${highlight(c.name, shownQ)}</b><small>${c.sub}</small></span></a>`).join('')}</div>${moreBtn('cat', by.cat, 6)}</section>`);
+
+  if (want('size') && by.size.length) blocks.push(`<section class="card s-block"><div class="s-block-head"><h2>Типоразмеры</h2><span>${by.size.length} · цены за тонну с НДС</span></div>
+    <table class="s-sizes"><tbody>${limit(by.size, 8).map(s => `<tr>
+      <td class="name"><a href="${s.href}">${highlight(s.name, shownQ)}</a><small>${s.sub}</small></td>
+      <td class="c-n muted num">${s.offers ? s.offers + ' предл.' : '—'}</td>
+      <td class="r">${s.price ? `<span class="muted" style="font-size:12.5px">от</span> <span class="price">${fmt(s.price)} ₽</span>` : '<span class="muted">по запросу</span>'}</td>
+      <td class="r"><a class="btn btn-ghost btn-sm" href="${s.href}">Цены</a></td></tr>`).join('')}</tbody></table>${moreBtn('size', by.size, 8)}</section>`);
+
+  if (want('sup') && by.sup.length) blocks.push(`<section class="card s-block"><div class="s-block-head"><h2>Поставщики</h2><span>${by.sup.length}</span></div>
+    <div class="s-sups">${limit(by.sup, 4).map(s => `<a class="s-sup" href="${s.href}"><b>${highlight(s.name, shownQ)}</b>${s.featured ? '<span class="badge badge-verified">★ Проверенный поставщик</span>' : ''}<small>${s.sub}</small></a>`).join('')}</div>${moreBtn('sup', by.sup, 4)}</section>`);
+
+  if (want('srv') && by.srv.length) blocks.push(`<section class="card s-block"><div class="s-block-head"><h2>Услуги</h2><span>${by.srv.length}</span></div>
+    <div class="chips">${by.srv.map(s => `<a class="chip" href="${s.href}" style="display:inline-flex;align-items:center">${highlight(s.name, shownQ)}</a>`).join('')}</div></section>`);
+
+  box.innerHTML = blocks.join('');
+  box.querySelectorAll('[data-tab]').forEach(b => b.onclick = () => { state.tab = b.dataset.tab; render(); window.scrollTo({ top: 0 }); });
+  box.querySelectorAll('[data-all]').forEach(b => b.onclick = () => { state.showAll = true; render(); });
+}
+
+function go(q) {
+  state.q = q.trim(); state.tab = 'all'; state.showAll = false;
+  document.getElementById('sq').value = state.q;
+  document.getElementById('q').value = state.q;
+  try { sessionStorage.setItem('q', state.q); } catch {}
+  render();
+}
+
+document.getElementById('sForm').onsubmit = e => { e.preventDefault(); go(document.getElementById('sq').value); };
+// Поиск из шапки на этой странице работает без перезагрузки
+document.getElementById('q').closest('form').addEventListener('submit', e => { e.preventDefault(); go(document.getElementById('q').value); });
+document.getElementById('leadForm').onsubmit = e => { e.preventDefault(); e.target.querySelector('button').textContent = 'Заявка отправлена'; };
+
+// Запрос берём из адреса, а если его нет (в опубликованном демо) — из последнего поиска в шапке
+const fromUrl = new URLSearchParams(location.search).get('q');
+let stored = null; try { stored = sessionStorage.getItem('q'); } catch {}
+go(fromUrl || stored || 'шпунт');
+</script>
+</body>
+</html>

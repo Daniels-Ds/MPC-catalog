@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Поставщик · МПС Каталог</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+  .s-hero { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 24px; align-items: stretch; }
+  .s-id { display: flex; gap: 20px; align-items: center; }
+  .s-id h1 { margin: 0; }
+  .s-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-top: 22px; }
+  .contacts { display: grid; gap: 14px; align-content: start; }
+  .contacts .phone { font-size: 22px; }
+  .contact-row { display: grid; gap: 2px; }
+  .contact-row span { font-size: 12.5px; color: var(--c-text-2); }
+  .lock { display: flex; gap: 10px; align-items: start; padding: 12px; border-radius: var(--r-md); background: var(--c-bg); font-size: 13px; color: var(--c-text-2); }
+  .lock svg { flex: none; color: var(--c-muted); margin-top: 1px; }
+  .toolbar { display: flex; justify-content: space-between; align-items: center; gap: 14px; flex-wrap: wrap; padding: 20px 24px 16px; border-bottom: 1px solid var(--c-line-2); }
+  .table-foot { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; padding: 16px 24px; font-size: 13px; color: var(--c-text-2); }
+  .others { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr)); gap: 12px; }
+  .other { display: flex; gap: 12px; align-items: center; padding: 14px; border-radius: var(--r-md); border: 1px solid var(--c-line-2); background: var(--c-surface); color: var(--c-text); }
+  .other:hover { border-color: var(--c-primary-tint-2); color: var(--c-text); }
+  .other b { display: block; color: var(--c-ink); }
+  .other small { color: var(--c-text-2); font-size: 12.5px; }
+  .other .avatar { width: 40px; height: 40px; font-size: 14px; }
+  @media (max-width: 900px) { .s-hero { grid-template-columns: 1fr; } }
+  @media (max-width: 560px) { .s-id { align-items: start; } .s-stats { grid-template-columns: 1fr 1fr; } .toolbar, .table-foot { padding-left: 16px; padding-right: 16px; } .offers-wrap { padding: 0 16px; } }
+</style>
+</head>
+<body>
+
+<div data-site="header"></div>
+
+<main class="container">
+  <nav class="crumbs" aria-label="Навигация"><a href="index.html">Главная</a><span aria-hidden="true">/</span><a href="suppliers.html">Поставщики</a><span aria-hidden="true">/</span><span id="crumb"></span></nav>
+
+  <section class="s-hero">
+    <div class="card card-pad">
+      <div class="s-id">
+        <span class="avatar avatar-lg" id="avatar" aria-hidden="true"></span>
+        <div>
+          <div class="caps" id="city"></div>
+          <h1 class="h1" id="name" style="margin-top:6px"></h1>
+          <div class="row" style="margin-top:10px" id="badges"></div>
+        </div>
+      </div>
+      <div class="s-stats" id="stats"></div>
+    </div>
+    <aside class="card card-pad contacts" aria-labelledby="cTitle">
+      <div class="row" style="justify-content:space-between"><h2 class="h3" id="cTitle">Контакты</h2></div>
+      <div id="contacts"></div>
+      <div data-contacts-toggle></div>
+    </aside>
+  </section>
+
+  <div class="ad-slot" style="margin-top:24px;min-height:90px"><b>Здесь может быть ваша реклама</b><small>Баннер на страницах поставщиков · <a href="#">узнать условия</a></small></div>
+
+  <section class="card section" aria-labelledby="pTitle" style="margin-top:24px">
+    <div class="toolbar">
+      <h2 class="h3" id="pTitle">Прайс поставщика</h2>
+      <div class="chips" id="profiles"></div>
+    </div>
+    <div class="offers-wrap">
+      <table class="offers">
+        <thead><tr>
+          <th class="c-sel"><span class="sr-only">В запрос</span></th>
+          <th>Позиция</th><th>Марка</th><th>Длина, м</th><th class="r">Цена за т, ₽</th><th><span class="sr-only">Действие</span></th>
+        </tr></thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </div>
+    <div class="table-foot"><span id="summary"></span><span>Цены с НДС, без доставки · обновлено сегодня</span></div>
+  </section>
+
+  <section class="section">
+    <div class="section-head"><div><div class="caps">Ещё в каталоге</div><h2 class="h2">Другие поставщики шпунта</h2></div><a class="btn btn-ghost btn-sm" href="suppliers.html">Все поставщики</a></div>
+    <div class="others" id="others"></div>
+  </section>
+</main>
+
+<div data-site="footer"></div>
+
+<div class="requestbar" id="requestbar" role="status" style="position:fixed;left:50%;bottom:20px;transform:translate(-50%,140%);transition:transform .25s;z-index:40;display:flex;gap:16px;align-items:center;padding:10px 10px 10px 20px;background:var(--c-navy);color:#fff;border-radius:var(--r-md);box-shadow:0 12px 40px rgba(4,31,65,.35);max-width:calc(100% - 32px)">
+  <span id="requestText"></span>
+  <button class="btn btn-white btn-sm" type="button" id="sendReq">Отправить запрос</button>
+</div>
+
+<script src="data.js"></script>
+<script src="site.js"></script>
+<script>
+const fmt = n => n.toLocaleString('ru-RU');
+const id = location.hash.slice(1) || (() => { try { return sessionStorage.getItem('supplier'); } catch { return null; } })();
+const s = SUPPLIERS.find(x => x.id === id) || SUPPLIERS[0];
+const state = { profile: 'all', picked: new Set(), asked: false };
+document.title = `${s.name} · МПС Каталог`;
+
+document.getElementById('crumb').textContent = s.name;
+document.getElementById('avatar').textContent = initials(s.name);
+document.getElementById('city').textContent = `Поставщик · ${s.city}`;
+document.getElementById('name').textContent = s.name;
+document.getElementById('badges').innerHTML = (s.featured ? '<span class="badge badge-verified">★ Проверенный поставщик</span>' : '') + '<span class="badge badge-stock"><span class="dot"></span>Прайс обновлён сегодня</span>';
+document.getElementById('stats').innerHTML = `
+  <div class="stat"><b class="num">${s.offers}</b><span>позиций в прайсе</span></div>
+  <div class="stat"><b class="num">${s.profiles.length}</b><span>профилей шпунта</span></div>
+  <div class="stat"><b class="num">${s.minPrice ? fmt(s.minPrice) + ' ₽' : '—'}</b><span>${s.minPrice ? 'минимальная цена за т' : 'цены по запросу'}</span></div>`;
+
+function renderContacts() {
+  const box = document.getElementById('contacts');
+  if (contactsVisible()) {
+    box.innerHTML = `<div class="contact-row"><span>Телефон</span><span class="phone">${s.phone}</span></div>
+      <div class="contact-row"><span>Город</span><b>${s.city}</b></div>
+      <button class="btn btn-primary btn-block" type="button" data-ask>Запросить цену</button>`;
+  } else {
+    box.innerHTML = `<div class="contact-row"><span>Телефон</span><span class="phone phone-hidden">+7 (···) ···-··-··</span></div>
+      <div class="lock"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
+        <span>Контакты поставщика скрыты. Отправьте запрос — мы передадим его поставщику и пришлём ответ вам.</span></div>
+      <button class="btn btn-primary btn-block" type="button" data-ask>${state.asked ? 'Запрос отправлен' : 'Запросить цену и контакты'}</button>`;
+  }
+  box.querySelector('[data-ask]').onclick = e => { state.asked = true; e.target.textContent = 'Запрос отправлен'; };
+}
+
+function renderProfiles() {
+  const box = document.getElementById('profiles'); box.innerHTML = '';
+  [['all', `Все · ${s.rows.length}`], ...s.profiles.map(p => [p, `${p} · ${s.rows.filter(r => r[0] === p).length}`])].forEach(([v, label]) => {
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'chip chip-sm'; b.textContent = label;
+    b.setAttribute('aria-pressed', String(state.profile === v));
+    b.onclick = () => { state.profile = v; renderProfiles(); renderRows(); };
+    box.append(b);
+  });
+}
+
+function renderRows() {
+  const rows = s.rows.map((r, i) => ({ i, profile: r[0], steel: r[1], len: r[2], price: r[3] })).filter(r => state.profile === 'all' || r.profile === state.profile);
+  document.getElementById('rows').innerHTML = rows.map(r => {
+    const href = r.profile === 'Л5-УМ' ? 'l5-um.html' : '#';
+    return `<tr>
+      <td class="c-sel"><input class="chk" type="checkbox" data-i="${r.i}" aria-label="Добавить в запрос"${state.picked.has(r.i) ? ' checked' : ''}></td>
+      <td class="c-sup sup"><a href="${href}">Шпунт Ларсена ${r.profile}</a></td>
+      <td data-l="Марка">${r.steel || '<span class="muted">—</span>'}</td>
+      <td data-l="Длина" class="num">${r.len || '<span class="muted">—</span>'}</td>
+      <td class="r">${r.price ? `<span class="price">${fmt(r.price)} ₽</span>` : '<span class="ask">по запросу</span>'}</td>
+      <td class="c-act r"><a class="btn btn-ghost btn-sm" href="${href}">Сравнить цены</a></td></tr>`;
+  }).join('');
+  document.querySelectorAll('#rows .chk').forEach(c => c.onchange = () => { c.checked ? state.picked.add(+c.dataset.i) : state.picked.delete(+c.dataset.i); updateRequest(); });
+  document.getElementById('summary').textContent = `${rows.length} позиций`;
+}
+
+function updateRequest() {
+  const n = state.picked.size;
+  document.getElementById('reqCount').textContent = n;
+  document.getElementById('requestText').textContent = `${n} ${n === 1 ? 'позиция' : n < 5 ? 'позиции' : 'позиций'} в запросе к «${s.name}»`;
+  document.getElementById('requestbar').style.transform = n ? 'translate(-50%,0)' : 'translate(-50%,140%)';
+}
+document.getElementById('sendReq').onclick = e => { e.target.textContent = 'Запрос отправлен'; };
+
+document.getElementById('others').innerHTML = SUPPLIERS.filter(x => x.id !== s.id).map(x => `
+  <a class="other" href="supplier.html#${x.id}"><span class="avatar" aria-hidden="true">${initials(x.name)}</span>
+    <span><b>${x.name}</b><small>${x.offers} позиций${x.minPrice ? ' · от ' + fmt(x.minPrice) + ' ₽/т' : ''}</small></span></a>`).join('');
+// Переход на другого поставщика меняет только #id — перерисовываем страницу
+window.addEventListener('hashchange', () => location.reload());
+
+mountContactsToggle(renderContacts);
+renderContacts(); renderProfiles(); renderRows();
+</script>
+</body>
+</html>
